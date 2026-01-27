@@ -1,26 +1,95 @@
 @import "tailwindcss";
 
+/* ============================================
+   SPOTIFY THEME - JAMSHARE
+   Dark mode first, Spotify-inspired colors
+   ============================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Spotify Colors */
+  --spotify-black: #121212;
+  --spotify-dark-gray: #181818;
+  --spotify-gray: #282828;
+  --spotify-light-gray: #b3b3b3;
+  --spotify-white: #ffffff;
+  --spotify-green: #1db954;
+  --spotify-green-light: #1ed760;
+  
+  /* Semantic Colors */
+  --background: #121212;
+  --background-elevated: #181818;
+  --background-highlight: #282828;
+  --foreground: #ffffff;
+  --foreground-muted: #b3b3b3;
+  --primary: #1db954;
+  --primary-hover: #1ed760;
+  
+  /* Danger/Error */
+  --error: #f44336;
+  --error-light: #ff5252;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-elevated: var(--background-elevated);
+  --color-background-highlight: var(--background-highlight);
   --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-error: var(--error);
+  
+  /* Spotify-named colors for convenience */
+  --color-spotify-black: var(--spotify-black);
+  --color-spotify-green: var(--spotify-green);
+  
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Global Styles */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for Spotify feel */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--spotify-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--spotify-gray);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--spotify-light-gray);
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--spotify-green);
+  outline-offset: 2px;
+}
+
+/* Link defaults */
+a {
+  color: var(--foreground);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--spotify-green);
 }
