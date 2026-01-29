@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, User, PlusCircle, Search, LogOut, Music } from "lucide-react";
+import { Home, User, PlusCircle, Search, LogOut, Music, Sparkles } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -32,6 +32,12 @@ const routes = [
         icon: Music,
         href: "/my-jams",
         color: "text-emerald-500"
+    },
+    {
+        label: "Music Analysis",
+        icon: Sparkles,
+        href: "/analysis",
+        color: "text-orange-500"
     }
 ];
 
