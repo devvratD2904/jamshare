@@ -18,7 +18,7 @@ export default async function EditProfilePage() {
     if (!user) return null;
 
     return (
-        <div className="flex flex-col items-center justify-center p-8">
+        <div className="w-full max-w-[1800px] mx-auto p-8 pt-12">
             <EditProfileForm user={user} />
         </div>
     );

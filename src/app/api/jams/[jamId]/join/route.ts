@@ -25,8 +25,46 @@ export async function POST(
             return new NextResponse("Jam not found", { status: 404 });
         }
 
-        // Record participation
-        // (Optional: Check if already joined to avoid duplicates, but for now we log every 'join' click as a potential new session entry)
+        // 1. Check if user is already participating in THIS jam
+        const existingParticipation = await prisma.jamParticipation.findFirst({
+            where: {
+                jamId,
+                userId: session.user.id,
+                leftAt: null
+            },
+        });
+
+        if (existingParticipation) {
+            // Idempotent success - already joined
+            return NextResponse.json({ url: jam.spotifyJamUrl });
+        }
+
+        // 2. Check if user is participating in ANY OTHER active jam
+        // (Enforce "One Jam At A Time" rule)
+        const activeConflict = await prisma.jamParticipation.findFirst({
+            where: {
+                userId: session.user.id,
+                leftAt: null, // Still in it
+                jam: {
+                    isActive: true, // Jam is still live
+                    id: { not: jamId } // Not this one
+                }
+            },
+            include: { jam: true }
+        });
+
+        if (activeConflict) {
+            // Rejection: User must leave the other jam first
+            return new NextResponse(JSON.stringify({
+                error: "User is already in an active jam",
+                activeJamId: activeConflict.jamId
+            }), {
+                status: 409, // Conflict
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        // 3. Record participation
         await prisma.jamParticipation.create({
             data: {
                 jamId,

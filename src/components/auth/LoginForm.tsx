@@ -53,24 +53,24 @@ export function LoginForm() {
     }
 
     return (
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full space-y-6">
             <div className="text-center">
-                <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">
-                    Log in to JamShare
+                <h2 className="text-2xl font-bold tracking-tight text-white mb-2">
+                    Welcome Back
                 </h2>
-                <p className="mt-2 text-sm text-[var(--spotify-light-gray)]">
+                <p className="text-sm text-white/50">
                     Don't have an account?{" "}
                     <Link
                         href="/register"
-                        className="font-medium text-[var(--spotify-green)] hover:text-[var(--spotify-green-light)] hover:underline"
+                        className="font-medium text-primary hover:text-primary-glow hover:underline transition-colors"
                     >
                         Sign up
                     </Link>
                 </p>
             </div>
 
-            <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                <div className="space-y-4 rounded-md shadow-sm">
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+                <div className="space-y-4">
                     <Input
                         id="email"
                         type="email"
@@ -78,6 +78,7 @@ export function LoginForm() {
                         placeholder="name.surname@gmail.com"
                         error={errors.email?.message}
                         {...register("email")}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 backdrop-blur-sm"
                     />
                     <Input
                         id="password"
@@ -86,17 +87,22 @@ export function LoginForm() {
                         placeholder="••••••••"
                         error={errors.password?.message}
                         {...register("password")}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 backdrop-blur-sm"
                     />
                 </div>
 
                 {error && (
-                    <div className="rounded-md bg-[var(--error)] p-3 text-sm text-white">
+                    <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-200">
                         {error}
                     </div>
                 )}
 
-                <Button type="submit" className="w-full" isLoading={isLoading}>
-                    Log in
+                <Button
+                    type="submit"
+                    className="w-full bg-primary text-black hover:bg-white font-bold tracking-wide py-6 rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(45,226,120,0.4)]"
+                    isLoading={isLoading}
+                >
+                    Log In
                 </Button>
             </form>
         </div>

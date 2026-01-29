@@ -1,95 +1,151 @@
 @import "tailwindcss";
 
 /* ============================================
-   SPOTIFY THEME - JAMSHARE
-   Dark mode first, Spotify-inspired colors
+   NEON VOID THEME - JAMSHARE
+   Immersive, Animation-First, Glass-Heavy
    ============================================ */
 
 :root {
-  /* Spotify Colors */
-  --spotify-black: #121212;
-  --spotify-dark-gray: #181818;
-  --spotify-gray: #282828;
-  --spotify-light-gray: #b3b3b3;
-  --spotify-white: #ffffff;
-  --spotify-green: #1db954;
-  --spotify-green-light: #1ed760;
-  
-  /* Semantic Colors */
-  --background: #121212;
-  --background-elevated: #181818;
-  --background-highlight: #282828;
-  --foreground: #ffffff;
-  --foreground-muted: #b3b3b3;
-  --primary: #1db954;
-  --primary-hover: #1ed760;
-  
-  /* Danger/Error */
-  --error: #f44336;
-  --error-light: #ff5252;
+  /* The Void */
+  --background: #030305;
+  --background-void: radial-gradient(circle at center, #1a1a1a 0%, #030305 100%);
+
+  /* Glass Surfaces */
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.05);
+
+  /* Neon Accents */
+  --primary: #2DE278;
+  /* Neon Mint */
+  --primary-glow: rgba(45, 226, 120, 0.3);
+  --secondary: #8C2DE2;
+  /* Electric Purple */
+  --secondary-glow: rgba(140, 45, 226, 0.3);
+
+  /* Typography */
+  --foreground: #FFFFFF;
+  --foreground-muted: #A1A1A1;
+  --font-display: var(--font-inter);
+  /* Using Inter as base, will style as Display */
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-background-elevated: var(--background-elevated);
-  --color-background-highlight: var(--background-highlight);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-primary: var(--primary);
+  --color-primary-glow: var(--primary-glow);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-glow: var(--secondary-glow);
+
   --color-foreground: var(--foreground);
   --color-foreground-muted: var(--foreground-muted);
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-error: var(--error);
-  
-  /* Spotify-named colors for convenience */
-  --color-spotify-black: var(--spotify-black);
-  --color-spotify-green: var(--spotify-green);
-  
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  --font-sans: var(--font-geist-sans), "Inter", sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
 /* Global Styles */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  /* Prevent horizontal scroll from effects */
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  min-height: 100vh;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Custom scrollbar for Spotify feel */
+/* Custom Scrollbar (Minimal) */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--spotify-black);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--spotify-gray);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--spotify-light-gray);
+  background: rgba(255, 255, 255, 0.3);
 }
 
-/* Focus styles for accessibility */
-*:focus-visible {
-  outline: 2px solid var(--spotify-green);
-  outline-offset: 2px;
+/* Animations */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
-/* Link defaults */
-a {
-  color: var(--foreground);
-  text-decoration: none;
-  transition: color 0.2s ease;
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 20px var(--primary-glow);
+  }
+
+  50% {
+    opacity: 0.5;
+    box-shadow: 0 0 40px var(--primary-glow);
+  }
 }
 
-a:hover {
-  color: var(--spotify-green);
+/* Lenis Recommended CSS */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Nav Entrance Animation */
+@keyframes nav-enter {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-nav-enter {
+  animation: nav-enter 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+  /* ensure it's hidden before animation starts */
 }

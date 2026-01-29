@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
                 id: dbUser.id,
                 name: dbUser.name,
                 email: dbUser.email,
-                picture: dbUser.avatar,
+                picture: (dbUser.avatar && dbUser.avatar.length > 500) ? null : dbUser.avatar,
                 username: dbUser.username,
             };
         },

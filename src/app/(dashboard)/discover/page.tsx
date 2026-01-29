@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { FilterBar } from "./FilterBar";
-import { JamCard } from "@/components/jams/JamCard";
+import { FeaturedJamCard } from "@/components/dashboard/FeaturedJamCard";
+import { SearchInput } from "@/components/discover/SearchInput";
+import { VibeSelector } from "@/components/discover/VibeSelector";
 import { TagCategory } from "@prisma/client";
+import { ImmersiveNav } from "@/components/layout/ImmersiveNav"; // Ensure nav is clear if parent layout didn't cover it well (it does, but safety)
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +26,6 @@ export default async function DiscoverPage({
         where.OR = [
             { title: { contains: q, mode: "insensitive" } },
             { description: { contains: q, mode: "insensitive" } },
-            // Also search by tag name text if needed, but we have specific tag filter
         ];
     }
 
@@ -56,7 +57,7 @@ export default async function DiscoverPage({
                 include: {
                     tag: true
                 }
-            } // Include tags to show them on card if we want (not implemented in card yet but optional)
+            }
         }
     });
 
@@ -76,42 +77,44 @@ export default async function DiscoverPage({
         }
     });
 
-    // 3. User context for JamCard
-    const userId = session?.user?.id || "";
-    let joinedJamIds = new Set<string>();
-    if (userId) {
-        const participations = await prisma.jamParticipation.findMany({
-            where: { userId },
-            select: { jamId: true }
-        });
-        joinedJamIds = new Set(participations.map(p => p.jamId));
-    }
-
     return (
-        <div className="flex flex-col h-full bg-gradient-to-b from-[var(--spotify-black)] to-[var(--background)] p-8 overflow-y-auto">
-            <div className="mb-8 space-y-2">
-                <h1 className="text-3xl font-bold text-white">Discover</h1>
-                <p className="text-[var(--spotify-light-gray)]">
-                    Explore new sounds, artists, and vibes.
+        <div className="min-h-screen bg-[var(--background)] p-8 pt-12 max-w-7xl mx-auto overflow-x-hidden">
+            {/* Header Section */}
+            <div className="flex flex-col items-center text-center mb-12 space-y-4">
+                <div className="relative">
+                    {/* Glow behind title */}
+                    <div className="absolute -inset-10 bg-primary/20 blur-[100px] rounded-full opacity-50" />
+                    <h1 className="relative text-5xl md:text-7xl font-bold text-white tracking-tighter">
+                        Discover Jams
+                    </h1>
+                </div>
+                <p className="text-xl text-white/50 font-light max-w-2xl">
+                    Find your next favorite music session.
                 </p>
             </div>
 
-            <div className="mb-8">
-                <FilterBar groupedTags={groupedTags} />
+            {/* Search Section */}
+            <div className="max-w-4xl mx-auto mb-20">
+                <SearchInput />
             </div>
 
+            {/* Vibe Selector (Tags) */}
+            <div className="max-w-5xl mx-auto mb-20">
+                <VibeSelector groupedTags={groupedTags} />
+            </div>
+
+            {/* Results Grid */}
             {jams.length === 0 ? (
-                <div className="text-center py-20 text-[var(--spotify-light-gray)]">
-                    <p className="text-lg">No jams found matching your filters.</p>
+                <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/5 backdrop-blur-sm">
+                    <p className="text-2xl font-bold text-white mb-2">No jams found</p>
+                    <p className="text-white/50">Try adjusting your vibe or search query.</p>
                 </div>
             ) : (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {jams.map(jam => (
-                        <JamCard
+                        <FeaturedJamCard
                             key={jam.id}
                             jam={jam}
-                            currentUserId={userId}
-                            isJoined={joinedJamIds.has(jam.id)}
                         />
                     ))}
                 </div>

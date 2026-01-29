@@ -14,11 +14,15 @@ export async function DELETE(
         const resolvedParams = await params;
         const { jamId } = resolvedParams;
 
-        // Delete participation
-        await prisma.jamParticipation.deleteMany({
+        // Update participation to set leftAt (Soft Leave)
+        await prisma.jamParticipation.updateMany({
             where: {
                 jamId: jamId,
-                userId: session.user.id
+                userId: session.user.id,
+                leftAt: null
+            },
+            data: {
+                leftAt: new Date()
             }
         });
 

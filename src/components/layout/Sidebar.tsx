@@ -64,7 +64,7 @@ export function Sidebar() {
                     ))}
 
                     <div className="mt-8 px-3">
-                        <Link href="/jams/create">
+                        <Link href="/create">
                             <Button className="w-full justify-start" size="md">
                                 <PlusCircle className="mr-2 h-5 w-5" />
                                 Create Jam
