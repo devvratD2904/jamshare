@@ -129,13 +129,3 @@ export default async function DiscoverPage({
         </div>
     );
 }
-<FeaturedJamCard
-    key={jam.id}
-    jam={jam as any}
-/>
-                    ))}
-                </div >
-            )}
-        </div >
-    );
-}
