@@ -42,10 +42,9 @@ export default async function DashboardPage() {
                     username: true
                 }
             },
-            _count: { // Dynamic count based on JamParticipation
-                select: {
-                    participants: true
-                }
+            participants: {
+                where: { leftAt: null },
+                select: { userId: true }
             },
             tags: {
                 include: {
@@ -54,6 +53,14 @@ export default async function DashboardPage() {
             }
         }
     });
+
+    // Format jams to include accurate participant count
+    const formattedJams = jams.map(jam => ({
+        ...jam,
+        _count: {
+            participants: jam.participants.length
+        }
+    }));
 
     return (
         <div className="min-h-screen bg-[var(--background)] p-8 pt-12 w-full max-w-[1800px] mx-auto">
@@ -82,10 +89,10 @@ export default async function DashboardPage() {
                 </div>
             ) : (
                 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                    {jams.map((jam) => (
+                    {formattedJams.map((jam) => (
                         <FeaturedJamCard
                             key={jam.id}
-                            jam={jam}
+                            jam={jam as any}
                             currentUserId={session?.user?.id}
                             activeJoinedJamId={activeParticipation?.jamId}
                         />

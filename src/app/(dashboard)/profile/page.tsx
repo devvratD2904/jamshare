@@ -46,10 +46,18 @@ export default async function ProfilePage() {
         orderBy: { createdAt: "desc" },
         include: {
             sharedBy: { select: { name: true, avatar: true, username: true } },
-            _count: { select: { participants: true } },
+            participants: {
+                where: { leftAt: null },
+                select: { userId: true }
+            },
             tags: { include: { tag: true } }
         }
     });
+
+    const formattedCreatedJams = createdJams.map(jam => ({
+        ...jam,
+        _count: { participants: jam.participants.length }
+    }));
 
     const joinedParticipations = await prisma.jamParticipation.findMany({
         where: { userId: session.user.id },
@@ -58,13 +66,27 @@ export default async function ProfilePage() {
             jam: {
                 include: {
                     sharedBy: { select: { name: true, avatar: true, username: true } },
-                    _count: { select: { participants: true } },
+                    participants: {
+                        where: { leftAt: null },
+                        select: { userId: true }
+                    },
                     tags: { include: { tag: true } }
                 }
             }
         }
     });
-    const joinedJams = joinedParticipations.map(p => p.jam);
+
+    // Deduplicate and format joined jams
+    const joinedJamsMap = new Map();
+    joinedParticipations.forEach(p => {
+        if (!joinedJamsMap.has(p.jam.id)) {
+            joinedJamsMap.set(p.jam.id, {
+                ...p.jam,
+                _count: { participants: p.jam.participants.length }
+            });
+        }
+    });
+    const joinedJams = Array.from(joinedJamsMap.values());
 
     // 3. Fetch Recent Jammers (Users in jams I've been in)
     // Find jams I'm part of
@@ -171,10 +193,10 @@ export default async function ProfilePage() {
                         </div>
                     ) : (
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                            {createdJams.map(jam => (
+                            {formattedCreatedJams.map(jam => (
                                 <FeaturedJamCard
                                     key={jam.id}
-                                    jam={jam}
+                                    jam={jam as any}
                                     currentUserId={session.user.id}
                                     activeJoinedJamId={activeParticipation?.jamId}
                                 />
@@ -194,7 +216,7 @@ export default async function ProfilePage() {
                             {joinedJams.map(jam => (
                                 <FeaturedJamCard
                                     key={jam.id}
-                                    jam={jam}
+                                    jam={jam as any}
                                     currentUserId={session.user.id}
                                     activeJoinedJamId={activeParticipation?.jamId}
                                 />

@@ -108,11 +108,6 @@ export default function LandingPage() {
             <span className="ml-2">Join Live Jams</span>
           </MagneticButton>
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 animate-bounce opacity-80">
-          <span className="text-xs uppercase tracking-[0.3em] text-white/80">Scroll to Discover</span>
-        </div>
       </section>
 
       {/* Features Section */}

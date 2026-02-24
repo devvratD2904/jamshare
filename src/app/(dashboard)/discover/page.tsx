@@ -48,10 +48,9 @@ export default async function DiscoverPage({
                     username: true
                 }
             },
-            _count: {
-                select: {
-                    participants: true
-                }
+            participants: {
+                where: { leftAt: null },
+                select: { userId: true }
             },
             tags: {
                 include: {
@@ -60,6 +59,14 @@ export default async function DiscoverPage({
             }
         }
     });
+
+    // Format jams to include accurate participant count
+    const formattedJams = jams.map(jam => ({
+        ...jam,
+        _count: {
+            participants: jam.participants.length
+        }
+    }));
 
     // 2. Fetch all Tags to display filters
     const tags = await prisma.tag.findMany({
@@ -111,14 +118,24 @@ export default async function DiscoverPage({
                 </div>
             ) : (
                 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {jams.map(jam => (
+                    {formattedJams.map(jam => (
                         <FeaturedJamCard
                             key={jam.id}
-                            jam={jam}
+                            jam={jam as any}
                         />
                     ))}
                 </div>
             )}
         </div>
+    );
+}
+<FeaturedJamCard
+    key={jam.id}
+    jam={jam as any}
+/>
+                    ))}
+                </div >
+            )}
+        </div >
     );
 }
